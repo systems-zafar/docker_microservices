@@ -1,0 +1,49 @@
+version: '3'
+services:
+  inventory:
+    build: 
+      context: ./inventory-service
+      dockerfile: Dockerfile
+    container_name: inventory
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./inventory-service:/usr/src/app/src:z
+    ports:
+     - "5001:3001"
+    restart: always
+
+  shipping:
+    build: 
+      context: ./shipping-service
+      dockerfile: Dockerfile
+    container_name: shipping
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./shipping-service:/usr/src/app/src:z
+    ports:
+     - "5003:3002"
+    restart: always
+
+  users:
+    build: 
+      context: ./users-service
+      dockerfile: Dockerfile
+    container_name: users
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./users-service:/usr/src/app/src:z
+    ports:
+     - "5006:3003"
+    restart: always
+    
+  billing:
+    build: 
+      context: ./billing-service
+      dockerfile: Dockerfile
+    container_name: billing
+    volumes:
+     - ./tmp/npm:/root/.npm:z
+     - ./billing-service:/usr/src/app/src:z
+    ports:
+     - "5002:3000"
+    restart: always
