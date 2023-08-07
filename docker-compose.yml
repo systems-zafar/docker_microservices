@@ -1,5 +1,18 @@
 version: '3'
 services:
+  rabbitmq-service:
+    image: "rabbitmq:management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  data-service:
+    build: ./data-service
+    depends_on:
+      - rabbitmq-service
+  webhook-service:
+    build: ./webhook-service
+    depends_on:
+      - rabbitmq-service
   inventory:
     build: 
       context: ./inventory-service
@@ -10,6 +23,8 @@ services:
      - ./inventory-service:/usr/src/app/src:z
     ports:
      - "5001:3001"
+    depends_on:
+      - rabbitmq-service
     restart: always
 
   shipping:
@@ -22,6 +37,8 @@ services:
      - ./shipping-service:/usr/src/app/src:z
     ports:
      - "5003:3002"
+    depends_on:
+      - rabbitmq-service
     restart: always
 
   users:
@@ -34,6 +51,8 @@ services:
      - ./users-service:/usr/src/app/src:z
     ports:
      - "5006:3003"
+    depends_on:
+      - rabbitmq-service
     restart: always
     
   billing:
@@ -46,4 +65,6 @@ services:
      - ./billing-service:/usr/src/app/src:z
     ports:
      - "5002:3000"
+    depends_on:
+      - rabbitmq-service
     restart: always
